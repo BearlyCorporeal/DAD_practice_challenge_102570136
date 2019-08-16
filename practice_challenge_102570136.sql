@@ -76,6 +76,7 @@ INSERT INTO Booking0136 (ClientId,TourName,EventMonth,EventDay,EventYear,Payment
 INSERT INTO Booking0136 (ClientId,TourName,EventMonth,EventDay,EventYear,Payment,DateBooked)VALUES(3,'North','Aug',8,2017,200,'12/12/2016');
 INSERT INTO Booking0136 (ClientId,TourName,EventMonth,EventDay,EventYear,Payment,DateBooked)VALUES(3,'South','jan',16,2017,190,'1/03/2016');
 
+
 SELECT c.GivenName,c.Surname, T.Tourname, T.description, E.EventYear, E.EventMonth, E.EventDay, E.EventFee, B.DateBooked, B.Payment FROM Client0136 c
 INNER join Booking0136 B
 ON c.ClientID = B.ClientID
@@ -83,6 +84,7 @@ INNER JOIN Event0136 E
 ON E.EventYear = B.EventYear and E.EventDay = B.EventDay and E.EventMonth = B.EventMonth
 INNER JOIN Tour0136 T
 on E.TourName = T.TourName;
+
 
 SELECT  E.EventMonth, T.TourName,count(c.ClientID)FROM Client0136 c
 INNER join Booking0136 B
@@ -93,6 +95,15 @@ INNER JOIN Tour0136 T
 on E.TourName = T.TourName
 GROUP BY E.EventMonth,T.TourName
 
-SELECT*from Booking0136
-WHERE Payment > (SELECT AVG(payment) from Booking0136)
 
+SELECT*from Booking0136
+WHERE Payment > (SELECT AVG(payment) from Booking0136);
+
+CREATE VIEW Query4 AS
+SELECT c.GivenName,c.Surname, T.Tourname, T.description, E.EventYear, E.EventMonth, E.EventDay, E.EventFee, B.DateBooked, B.Payment FROM Client0136 c
+INNER join Booking0136 B
+ON c.ClientID = B.ClientID
+INNER JOIN Event0136 E
+ON E.EventYear = B.EventYear and E.EventDay = B.EventDay and E.EventMonth = B.EventMonth
+INNER JOIN Tour0136 T
+on E.TourName = T.TourName;
