@@ -99,11 +99,11 @@ GROUP BY E.EventMonth,T.TourName
 SELECT*from Booking0136
 WHERE Payment > (SELECT AVG(payment) from Booking0136);
 
-CREATE VIEW Query4 AS
-SELECT c.GivenName,c.Surname, T.Tourname, T.description, E.EventYear, E.EventMonth, E.EventDay, E.EventFee, B.DateBooked, B.Payment FROM Client0136 c
-INNER join Booking0136 B
-ON c.ClientID = B.ClientID
-INNER JOIN Event0136 E
-ON E.EventYear = B.EventYear and E.EventDay = B.EventDay and E.EventMonth = B.EventMonth
-INNER JOIN Tour0136 T
-on E.TourName = T.TourName;
+--CREATE VIEW Query4 AS
+--SELECT c.GivenName,c.Surname, T.Tourname, T.description, E.EventYear, E.EventMonth, E.EventDay, E.EventFee, B.DateBooked, B.Payment FROM Client0136 c
+--INNER join Booking0136 B
+--ON c.ClientID = B.ClientID
+--INNER JOIN Event0136 E
+--ON E.EventYear = B.EventYear and E.EventDay = B.EventDay and E.EventMonth = B.EventMonth
+--INNER JOIN Tour0136 T
+--on E.TourName = T.TourName;
