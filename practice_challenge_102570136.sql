@@ -12,9 +12,13 @@
 -- Booking0136( DateBooked,Payment,EventYear,EverntMonth,EventDay,TourName,ClientID
 -- primary key(EventYear,EverntMonth,EventDay,TourName,ClientID)
 -- foreign key(EventYear,EverntMonth,EventDay,TourName)from Event0136
--- foreign key(ClientID)from Client0136 
+-- foreign key(ClientID)from Client0136
 
+
+drop TABLE if EXISTS Booking0136;
+drop TABLE if EXISTS Event0136;
 drop TABLE if EXISTS Tour0136;
+drop TABLE if EXISTS Client0136;
 create table Tour0136(
 TourName NVARCHAR(100)
 ,Description NVARCHAR(100) 
@@ -25,7 +29,7 @@ insert INTO Tour0136(TourName,Description)VALUES('West','Tour of wineries in the
 insert INTO Tour0136(TourName,Description)VALUES('South','Tour of wineries in the South')
 insert INTO Tour0136(TourName,Description)VALUES('East','Tour of wineries in the east')
 
-drop TABLE if EXISTS Client0136;
+
 create table Client0136(
 ClientID INT
 ,Surname NVARCHAR(100)
@@ -38,22 +42,23 @@ INSERT INTO Client0136 (ClientId,Surname,GivenName,Gender)VALUES(2,'Holt','Simon
 INSERT INTO Client0136 (ClientId,Surname,GivenName,Gender)VALUES(3,'Papa','Anthony','M')
 INSERT INTO Client0136 (ClientId,Surname,GivenName,Gender)VALUES(4,'Farmer','Lewis','M')
 
-drop TABLE if EXISTS Event0136;
+
 
 create table Event0136(
-EventYear NVARCHAR(100)
+EventYear INT
 ,EventMonth NVARCHAR(3)
 ,EventDay INT
 ,TourName NVARCHAR(100)
-,EventFee MONEY 
-primary key(TourName,EventMonth,EventDay,EventYear))
+,EventFee MONEY
+,foreign Key(TourName)REFERENCES Tour0136 
+,primary key(TourName,EventMonth,EventDay,EventYear))
 
 INSERT INTO Event0136(TourName,EventMonth,EventDay,EventYear,EventFee)VALUES('North','Jan',9,2016,200);
 INSERT INTO Event0136(TourName,EventMonth,EventDay,EventYear,EventFee)VALUES('North','Aug',8,2017,200);
 INSERT INTO Event0136(TourName,EventMonth,EventDay,EventYear,EventFee)VALUES('West','Oct',20,2018,210);
 INSERT INTO Event0136(TourName,EventMonth,EventDay,EventYear,EventFee)VALUES('South','jan',16,2017,190);
 
-drop TABLE if EXISTS Booking0136;
+
 
 create table Booking0136(
 DateBooked DATE
@@ -63,6 +68,7 @@ DateBooked DATE
 ,EventDay INT
 ,TourName NVARCHAR(100)
 ,ClientID INT
+,FOREIGN KEY(TourName,EventMonth,EventDay,EventYear) REFERENCES Event0136
 ,primary key(EventYear,EventMonth,EventDay,TourName,ClientID))
 
 INSERT INTO Booking0136 (ClientId,TourName,EventMonth,EventDay,EventYear,Payment,DateBooked)VALUES(1,'North','Jan',9,2016,200,'10/12/2015');
@@ -70,4 +76,23 @@ INSERT INTO Booking0136 (ClientId,TourName,EventMonth,EventDay,EventYear,Payment
 INSERT INTO Booking0136 (ClientId,TourName,EventMonth,EventDay,EventYear,Payment,DateBooked)VALUES(3,'North','Aug',8,2017,200,'12/12/2016');
 INSERT INTO Booking0136 (ClientId,TourName,EventMonth,EventDay,EventYear,Payment,DateBooked)VALUES(3,'South','jan',16,2017,190,'1/03/2016');
 
-SELECT* FROM Client0136;
+SELECT c.GivenName,c.Surname, T.Tourname, T.description, E.EventYear, E.EventMonth, E.EventDay, E.EventFee, B.DateBooked, B.Payment FROM Client0136 c
+INNER join Booking0136 B
+ON c.ClientID = B.ClientID
+INNER JOIN Event0136 E
+ON E.EventYear = B.EventYear and E.EventDay = B.EventDay and E.EventMonth = B.EventMonth
+INNER JOIN Tour0136 T
+on E.TourName = T.TourName;
+
+SELECT  E.EventMonth, T.TourName,count(c.ClientID)FROM Client0136 c
+INNER join Booking0136 B
+ON c.ClientID = B.ClientID
+INNER JOIN Event0136 E
+ON E.EventYear = B.EventYear and E.EventDay = B.EventDay and E.EventMonth = B.EventMonth
+INNER JOIN Tour0136 T
+on E.TourName = T.TourName
+GROUP BY E.EventMonth,T.TourName
+
+SELECT*from Booking0136
+WHERE Payment > (SELECT AVG(payment) from Booking0136)
+
